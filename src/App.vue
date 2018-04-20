@@ -17,6 +17,7 @@
    <trip-new></trip-new>
    <trip-load></trip-load>
    <trip-dest></trip-dest>
+   <trip-plan></trip-plan>
 
   </div>
 </template>
@@ -29,6 +30,7 @@ import TripNew from './components/trip-new.vue';
 import TripLoad from './components/trip-load.vue';
 import TripDest from './components/trip-dest.vue';
 import TripSummary from './components/trip-summary.vue';
+import TripPlan from './components/trip-plan.vue';
 
 export default {
   name: 'app',
@@ -37,7 +39,8 @@ export default {
     TripNew,
     TripLoad,
     TripDest,
-    TripSummary
+    TripSummary,
+    TripPlan
   },
   mounted() {
     const center = new google.maps.LatLng(51.0, 0.0);

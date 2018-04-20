@@ -3,6 +3,7 @@ import Vuex from 'vuex';
 import _ from 'lodash';
 
 import Mock from '../util/mock';
+import Trip from '../model/trip';
 
 Vue.use(Vuex);
 
@@ -10,7 +11,7 @@ export default new Vuex.Store({
   state: {
     /* Main data */
     user: Mock.mockLoggedInUser(),
-    trip: Mock.mockTrip(),
+    trip: new Trip(),
 
     /* Cache some services */
     placeService: null,

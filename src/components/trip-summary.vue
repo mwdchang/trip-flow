@@ -104,6 +104,9 @@ export default {
     ...mapGetters(['trip'])
   },
   methods: {
+    ...mapActions([
+      'setShowPlanDialog'
+    ]),
     listPlan: function(p) { return this.trip.listPlan(p); },
     findPlace: function(id) { return this.trip.findPlace(id); },
     switchTo: function(view) {
@@ -141,7 +144,7 @@ export default {
         planData.travels = plan.travels;
         planData.mode = 'edit';
       }
-      $('#planModal').modal('show');
+      this.setShowPlanDialog(true);
     },
     deletePlan: function() {
       if (this.trip.currentPlanIdx > -1) {
