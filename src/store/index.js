@@ -72,7 +72,21 @@ export default new Vuex.Store({
     },
     setAutocompleteService({commit}, srv) {
       commit('setAutocompleteService', srv);
+    },
+
+    getPlaceDetail({state}, placeId) {
+      return new Promise(function(resolve, reject) {
+        state.placeService.getDetails({placeId: placeId, types:['(cities)']}, function(place, status) {
+          if (status == google.maps.places.PlacesServiceStatus.OK) {
+            place.placeId = place.place_id;
+            resolve(place);
+          } else {
+            reject(null);
+          }
+        })
+      })
     }
+
   },
   mutations: {
     setSearchStr(state, s) {

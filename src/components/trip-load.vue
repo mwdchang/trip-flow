@@ -42,29 +42,30 @@ export default {
     });
   },
   computed: {
-    ...mapGetters(['showLoadTripDialog'])
+    ...mapGetters([
+      'showLoadTripDialog'
+    ])
   },
   methods: {
-    ...mapActions(['setShowLoadTripDialog']),
+    ...mapActions(['setShowLoadTripDialog', 'getPlaceDetail', 'setTrip']),
     load: function(name) {
       const path = '/Trip/' + name;
       DB.readDB(path).then( d => {
         if (d.val() === null) return;
-
         const trip = new Trip();
         trip.loadJSON(d.val());
+
         let promises = [];
         trip.places.forEach(p => {
-          promises.push(this.getDetailsWrapper(p));
+          promises.push(this.getPlaceDetail(p));
         });
         Promise.all(promises).then(values => {
           trip.places = values;
+          this.setTrip(trip);
+          this.setShowLoadTripDialog(false);
         });
-
- 
         
       });
-      this.setShowLoadTripDialog(false);
     },
     cancel: function() {
       this.setShowLoadTripDialog(false);

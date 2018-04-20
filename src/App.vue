@@ -3,6 +3,7 @@
    <trip-header></trip-header>
 
     <div class="flex-row"> 
+      <trip-summary></trip-summary>
       <div style="width:50%">
         <div id="googleMap" style="height:20rem; width:100%" class="todo"></div>
         <div class="flex-column">
@@ -27,6 +28,7 @@ import TripHeader from './components/header.vue';
 import TripNew from './components/trip-new.vue';
 import TripLoad from './components/trip-load.vue';
 import TripDest from './components/trip-dest.vue';
+import TripSummary from './components/trip-summary.vue';
 
 export default {
   name: 'app',
@@ -34,7 +36,8 @@ export default {
     TripHeader,
     TripNew,
     TripLoad,
-    TripDest
+    TripDest,
+    TripSummary
   },
   mounted() {
     const center = new google.maps.LatLng(51.0, 0.0);
