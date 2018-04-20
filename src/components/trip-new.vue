@@ -19,6 +19,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
+import DB from '../util/db';
 
 export default {
   name: 'TripNew',
@@ -26,11 +27,14 @@ export default {
     return {name: ''};
   },
   computed: {
-    ...mapGetters(['showNewTripDialog'])
+    ...mapGetters(['showNewTripDialog', 'trip'])
   },
   methods: {
     ...mapActions(['setShowNewTripDialog']),
     save: function() {
+      this.trip.name = this.name;
+      DB.writeDB('/Trip/'+this.name, this.trip.toObj());
+      this.setShowNewTripDialog(false);
       /*
       trip.currentPlan = null;
       trip.currentPlanIdx = -1;

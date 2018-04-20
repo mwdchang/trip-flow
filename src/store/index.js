@@ -46,7 +46,8 @@ export default new Vuex.Store({
     showNewTripDialog: (state) => state.showNewTripDialog,
     showLoadTripDialog: (state) => state.showLoadTripDialog,
     showPlanDialog: (state) => state.showPlanDialog,
-    showDestDialog: (state) => state.showDestDialog
+    showDestDialog: (state) => state.showDestDialog,
+    autocompleteService: (state) => state.autocompleteService
   },
   actions: {
     setSearchStr({commit}, s) {

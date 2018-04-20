@@ -57,30 +57,29 @@ export default {
     searchCandidates: []
   }),
   computed: {
-    ...mapGetters(['searchStr', 'showDestDialog'])
+    ...mapGetters(['trip', 'searchStr', 'showDestDialog', 'autocompleteService'])
   },
   methods: {
-    ...mapActions(['setSearchStr', 'setShowDestDialog']),
+    ...mapActions([
+      'setSearchStr', 
+      'setShowDestDialog', 
+      'getPlaceDetail'
+    ]),
     cancel: function() {
       this.setShowDestDialog(false);
     },
     select: function(place) {
-      trip.g_trip.addPlace(place);
+      this.trip.addPlace(place);
       this.searchStrModel = '';
-
-      // FIXME: Test
-      this.writeDB(TEST_KEY, this.g_trip.toObj()).then( d => {
-      });
-      this.tripChanged();
     },
     predict: debounce(function() {
-      this.g_trip.autocompleteService.getPlacePredictions({ input: this.searchStr, types:['(cities)']}, predictions => {
+      this.autocompleteService.getPlacePredictions({ input: this.searchStr, types:['(cities)']}, predictions => {
         if (!predictions || predictions === null) return;
 
         let promises = [];
         predictions.forEach( p => {
           if (!p.place_id) return;
-          promises.push(this.getDetailsWrapper(p.place_id));
+          promises.push(this.getPlaceDetail(p.place_id));
         });
 
         if (promises.length === 0) return;
