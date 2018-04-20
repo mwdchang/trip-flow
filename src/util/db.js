@@ -9,14 +9,18 @@ firebase.initializeApp(FIREBASE_CONFIG);
 const database = firebase.database();
 const provider = new firebase.auth.GoogleAuthProvider();
 
+export default class {
+  static readDB(path) {
+    return database.ref(path).once('value')
+  }
 
-function readDB(path) {
-  return database.ref(path).once('value')
+  static writeDB(path, value) {
+    return database.ref(path).set(value)
+  }
 }
 
-function writeDB(path, value) {
-  return database.ref(path).set(value)
-}
+
+
 
 function googleSignin() {
    firebase.auth()
@@ -43,7 +47,9 @@ function googleSignout() {
 }
 
 
+/*
 export {readDB}
 export {writeDB}
 export {googleSignin}
 export {googleSignout}
+*/

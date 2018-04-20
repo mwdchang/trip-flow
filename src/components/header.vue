@@ -6,10 +6,10 @@
      <a target="_blank" href="http://github.com/mwdchang/trip-flow"><i class="fa fa-github"></i>&nbsp;Fork me on GitHub</a>
      &nbsp;
      -->
-     <button class="btn btn-sm btn-info" v-on:click="openDialog('destinationModal')">New Destination</button>
-     <button class="btn btn-sm btn-info" v-on:click="openDialog('planModal')">New Plan</button>
-     <button class="btn btn-sm btn-info" v-on:click="openNewTrip()">New Trip</button>
-     <button class="btn btn-sm btn-info" v-on:click="openDialog('loadTrip')">Load Trip</button>
+     <button class="btn btn-sm btn-info" v-on:click="setShowDestDialog(true)">New Destination</button>
+     <button class="btn btn-sm btn-info" v-on:click="setShowPlanDialog(true)">New Plan</button>
+     <button class="btn btn-sm btn-info" v-on:click="setShowNewTripDialog(true)">New Trip</button>
+     <button class="btn btn-sm btn-info" v-on:click="setShowLoadTripDialog(true)">Load Trip</button>
      <button v-if="user.loggedIn === false" class="btn btn-sm btn-primary" v-on:click="signin()">Sign in </button>
      <button v-if="user.loggedIn === true" class="btn btn-sm btn-primary" v-on:click="signout()">Sign out </button>
   </div>
@@ -27,14 +27,12 @@ export default {
     ...mapGetters(['user'])
   },
   methods: {
-    ...mapActions(['setShowNewTripDialog']),
-    openNewTrip: function() {
-      this.setShowNewTripDialog(true);
-    },
-    openDialog: function(id) {
-      let target = '#' + id;
-      $(target).modal('show');
-    },
+    ...mapActions([
+      'setShowNewTripDialog',
+      'setShowLoadTripDialog',
+      'setShowPlanDialog',
+      'setShowDestDialog',
+    ]),
     signin: function() {
       this.googleSignin();
     },

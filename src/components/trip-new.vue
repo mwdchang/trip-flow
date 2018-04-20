@@ -1,5 +1,5 @@
 <template>
-  <div id="newTrip" class="modal" style="opacity:0.9" :class="{'show': showNewTripDialog}">
+  <div class="modal" style="opacity:0.9" :class="{'show': showNewTripDialog}">
   <div class="modal-dialog modal-lg"> 
     <div class="modal-content">
       <div class="modal-header">

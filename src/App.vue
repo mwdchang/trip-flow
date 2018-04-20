@@ -1,20 +1,62 @@
 <template>
   <div id="app">
    <trip-header></trip-header>
+
+    <div class="flex-row"> 
+      <div style="width:50%">
+        <div id="googleMap" style="height:20rem; width:100%" class="todo"></div>
+        <div class="flex-column">
+          <div>Plans Timeline</div>
+          <div style="width:100%; min-height:8rem" id="graph">
+          </div>
+        </div>
+      </div>
+    </div>
+
    <trip-new></trip-new>
+   <trip-load></trip-load>
+   <trip-dest></trip-dest>
+
   </div>
 </template>
 
 <script>
 
+import { mapGetters, mapActions } from 'vuex';
 import TripHeader from './components/header.vue';
 import TripNew from './components/trip-new.vue';
+import TripLoad from './components/trip-load.vue';
+import TripDest from './components/trip-dest.vue';
 
 export default {
   name: 'app',
   components: {
     TripHeader,
     TripNew,
+    TripLoad,
+    TripDest
+  },
+  mounted() {
+    const center = new google.maps.LatLng(51.0, 0.0);
+    const map = new google.maps.Map(document.getElementById('googleMap'), {
+      center: center,
+      zoom: 5,
+      mapTypeControlOptions: {
+        mapTypeIds: []
+      },
+      streetViewControl: false
+    });
+    const autocompleteService = new google.maps.places.AutocompleteService();
+    const placeService = new google.maps.places.PlacesService(map);
+
+    this.setPlaceService(placeService);
+    this.setAutocompleteService(autocompleteService);
+  },
+  methods: {
+    ...mapActions([
+      'setPlaceService',
+      'setAutocompleteService'
+    ])
   }
 }
 </script>
