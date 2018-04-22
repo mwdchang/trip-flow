@@ -26,6 +26,10 @@
     </div>
 
     <div v-if="trip.view==='plans'" style="padding:0.5rem">
+      <div v-if="trip.plans.length === 0">
+        Click on <strong><em>New Plan</em></strong> to add a new trip plan.
+      </div>
+
       <div style="display:flex; flex-direction:row">
         <div style="max-height: 25rem; overflow-y: scroll">
           <div v-for="(plan, idx) of trip.plans" v-on:click="show(plan, idx)" class="plan-card">
@@ -58,7 +62,7 @@
 
     <div v-if="trip.view==='destinations'" style="padding:0.5rem; max-height:25rem; overflow-y: scroll">
       <div v-if="trip.places.length === 0">
-        Click on <em>New Destination</em> to add destinations to your trip.
+        Click on <strong><em>New Destination</em></strong> to add destinations to your trip.
       </div>
       <table class="table" v-if="trip.view==='destinations'">
         <tbody>

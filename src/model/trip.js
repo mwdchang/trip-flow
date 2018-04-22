@@ -24,11 +24,6 @@ export default class Trip {
     this.updated = 0;
 
     this.view = 'summary';
-
-    // Services
-    this.graphService = null;
-    this.mapLayerService = null;
-    this.mapServicesLoaded = false;
   }
 
   addPlan(plan) {

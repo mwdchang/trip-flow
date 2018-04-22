@@ -23,6 +23,7 @@
 </template>
 
 <script>
+import * as d3 from 'd3';
 
 import { mapGetters, mapActions } from 'vuex';
 import TripHeader from './components/header.vue';
@@ -32,8 +33,15 @@ import TripDest from './components/trip-dest.vue';
 import TripSummary from './components/trip-summary.vue';
 import TripPlan from './components/trip-plan.vue';
 
+import MapLayer from './util/map-layer';
+import Graph from './util/graph';
+
 export default {
   name: 'app',
+  data: () => ({
+    mapLayer: null,
+    graph: null
+  }),
   components: {
     TripHeader,
     TripNew,
@@ -55,8 +63,19 @@ export default {
     const autocompleteService = new google.maps.places.AutocompleteService();
     const placeService = new google.maps.places.PlacesService(map);
 
+    this.graph = new Graph(d3.select('#graph'));
+    this.mapLayer = new MapLayer(map);
     this.setPlaceService(placeService);
     this.setAutocompleteService(autocompleteService);
+  },
+  computed: {
+    ...mapGetters(['trip'])
+  },
+  watch: {
+    trip: function changed() {
+      this.mapLayer.refresh(this.trip);
+      this.graph.render(this.trip);
+    }
   },
   methods: {
     ...mapActions([
@@ -158,6 +177,7 @@ select {
 /* override bootstrap */
 td {
   padding: 0.25rem 0.5rem !important;
+  text-align: left;
 }
 
 
