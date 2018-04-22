@@ -21,7 +21,6 @@ export default class {
 
 
 
-
 function googleSignin() {
    firebase.auth()
    .signInWithPopup(provider).then(function(result) {

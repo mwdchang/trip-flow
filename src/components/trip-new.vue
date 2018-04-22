@@ -35,17 +35,6 @@ export default {
       this.trip.name = this.name;
       DB.writeDB('/Trip/'+this.name, this.trip.toObj());
       this.setShowNewTripDialog(false);
-      /*
-      trip.currentPlan = null;
-      trip.currentPlanIdx = -1;
-      trip.places = [];
-      trip.plans = []; 
-      trip.name = this.name;
-      TEST_KEY = '/Trip/' + this.name;
-      this.tripChanged();
-      writeDB(TEST_KEY, trip.toObj());
-      $(this.$el).modal('hide');
-      */
     },
     cancel: function() {
       this.setShowNewTripDialog(false);

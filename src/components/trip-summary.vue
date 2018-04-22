@@ -35,12 +35,12 @@
           </div>
         </div> 
 
-        <div style="margin-left: 0.5rem; padding-left: 1.0rem;  border-left: 1px solid #ddd; flex:1" v-if="trip.currentPlan">
+        <div style="margin-left: 0.5rem; padding-left: 1.0rem;  border-left: 1px solid #ddd; flex:1" v-if="currentPlan">
           <button class="btn btn-sm btn-primary" v-on:click="editPlan()">Edit</button>
           <button class="btn btn-sm btn-danger" v-on:click="deletePlan()">Delete</button>
           <table class="table" style="margin-top: 0.5rem">
             <tbody>
-              <tr v-for="item of listPlan(trip.currentPlan)">
+              <tr v-for="item of listPlan(currentPlan)">
                 <td style="padding:0; position:relative; border: 0; width:25px">
                   <div style="position:absolute; top:0; left:9px; width:2px; height:100%; background: #AAA"></div>
                   <div v-if="item.type === 'itineraries'" style="position:absolute; left:0px; width:20px; height:20px; background: #EEE; border:2px solid #AAA; border-radius:50%"></div>
@@ -101,11 +101,17 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['trip'])
+    ...mapGetters([
+      'trip',
+      'currentPlan',
+      'currentPlanIdx'
+    ])
   },
   methods: {
     ...mapActions([
-      'setShowPlanDialog'
+      'setShowPlanDialog',
+      'setCurrentPlan',
+      'setCurrentPlanIdx',
     ]),
     listPlan: function(p) { return this.trip.listPlan(p); },
     findPlace: function(id) { return this.trip.findPlace(id); },
@@ -113,8 +119,8 @@ export default {
       this.trip.view = view;
     },
     show: function(plan, idx) {
-      this.trip.currentPlan = plan;
-      this.trip.currentPlanIdx = idx;
+      this.setCurrentPlan(plan);
+      this.setCurrentPlanIdx(idx);
     },
     isPlaceUsed: function(placeId) {
       let all = _.flatten(this.trip.plans.map(p => {
@@ -131,29 +137,20 @@ export default {
           this.trip.places.splice(idx, 1);
         }
         this.writeDB(TEST_KEY, this.trip.toObj());
-        this.tripChanged();
       }
     },
     editPlan: function() {
-      let plan = this.trip.currentPlan;
-      let planData = this.trip.planData;
-      if (plan === null) return;
-      if (plan) {
-        planData.name = plan.name;
-        planData.itineraries = plan.itineraries;
-        planData.travels = plan.travels;
-        planData.mode = 'edit';
-      }
       this.setShowPlanDialog(true);
     },
     deletePlan: function() {
-      if (this.trip.currentPlanIdx > -1) {
-        this.trip.plans.splice(this.trip.currentPlanIdx, 1);
-        this.trip.currentPlan = null;
-        this.trip.currentPlanIdx = -1;
+      
+      if (this.currentPlanIdx > -1) {
+        this.trip.plans.splice(this.currentPlanIdx, 1);
+        this.setCurrentPlan(null);
+        this.setCurrentPlanIdx(-1);
         this.writeDB(TEST_KEY, this.trip.toObj());
-        this.tripChanged();
       }
+      
     }
   }
 

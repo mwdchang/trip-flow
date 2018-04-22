@@ -23,24 +23,10 @@ export default class Trip {
     this.places = [];
     this.updated = 0;
 
-    this.currentPlan = null;
-    this.currentPlanIdx = -1;
     this.view = 'summary';
-
-    this.planData = {
-      name: '',
-      travels: [],
-      itineraries: [{
-        placeId: '',
-        duration: 1
-      }],
-      mode: null
-    };
 
     // Services
     this.graphService = null;
-    this.placeService = null;
-    this.autocompleteService = null;
     this.mapLayerService = null;
     this.mapServicesLoaded = false;
   }
@@ -100,12 +86,12 @@ export default class Trip {
     this.plans = data.plans || [];
     this.updated = data.updated || '';
 
-    this.currentPlan = null;
-    this.currentPlanIdx = -1;
     this.sanitize();
   }
 
   sanitize() {
+    if (this.plans.length === 0) return;
+
     this.plans.forEach( plan => {
       plan.itineraries.forEach( d => {
         d.duration = +d.duration;
@@ -126,4 +112,3 @@ export default class Trip {
     }
   }
 }
-

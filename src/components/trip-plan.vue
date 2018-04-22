@@ -1,11 +1,11 @@
 <template>
 <div class="modal" style="opacity:0.9" :class="{'show': showPlanDialog}">
   <div class="modal-dialog modal-lg">
-    <div class="modal-content">
+    <div class="modal-content" v-if="currentPlan">
       <div class="modal-header"><strong>Add/Edit Plan</strong></div>
       <div class="modal-body">
         <div> 
-          <input type="text" placeholder="Plan name" v-model="trip.planData.name">
+          <input type="text" placeholder="Plan name" v-model="currentPlan.name">
         </div>
         <br>
         <div style="display:flex; flex-direction: row">
@@ -20,7 +20,7 @@
                   <th>Notes</th>
                 </thead>
                 <tbody>
-                  <tr v-for="(item, idx) in trip.planData.itineraries" v-if="trip.planData.itineraries.length > 0">
+                  <tr v-for="(item, idx) in currentPlan.itineraries" v-if="currentPlan.itineraries.length > 0">
                     <td>
                       <button>-</button>
                       <button v-on:click="addRow()">+</button>
@@ -51,7 +51,7 @@
                   <th>Duration</th>
                 </thead>
                 <tbody>
-                  <tr v-for="travel in trip.planData.travels">
+                  <tr v-for="travel in currentPlan.travels">
                     <td>
                       <span>{{findPlace(travel.from).name}} &gt; {{findPlace(travel.to).name}}</span>
                     </td>
@@ -87,21 +87,21 @@ export default {
   computed: {
     ...mapGetters([
       'showPlanDialog', 
+      'currentPlan',
       'trip'
     ])
   },
   methods: {
-    ...mapActions(['setShowPlanDialog']),
+    ...mapActions(['setShowPlanDialog', 'setCurrentPlan']),
     save: function() {
-      let planData = this.trip.planData;
-      let itineraries = planData.itineraries.map( d => {
+      let itineraries = this.currentPlan.itineraries.map( d => {
         return {
           placeId: d.placeId,
           duration: d.duration
         };
       });
 
-      let travels = planData.travels.map( d => {
+      let travels = this.currentPlan.travels.map( d => {
         return {
           from: d.from,
           to: d.to,
@@ -109,19 +109,18 @@ export default {
         };
       });
 
-      if (planData.mode === null) { 
+      if (this.currentPlan.mode === null) { 
         let plan = {
-          name: this.trip.planData.name,
+          name: this.currentPlan.name,
           start: 0,
           end: 0,
           itineraries: itineraries,
           travels: travels
         };
         this.trip.addPlan(plan);
-        planData.mode = null;
+        this.currentPlan.mode = null;
       }
       this.trip.sanitize();
-      this.tripChanged();
       this.writeDB(TEST_KEY, this.trip.toObj());
 
       $(this.$el).modal('hide');
@@ -136,14 +135,14 @@ export default {
       return this.trip.findPlace(placeId);
     },
     addRow() {
-      this.itineraries.push({
+      this.currentPlan.itineraries.push({
         placeId: '',
         duration: 0
       });
 
-      let num = this.itineraries.length;
+      let num = this.currentPlan.itineraries.length;
       if (num > 1) {
-        this.travels.push({
+        this.currentPlan.travels.push({
           from: '', 
           to: '',
           duration: 0
@@ -152,11 +151,13 @@ export default {
     }
   },
   watch: {
-    'trip.planData.itineraries': function(n, o) {
-      let planData = this.g_trip.planData;
-      let it = planData.itineraries;
-      for (let i=0; i < planData.travels.length; i++) {
-        let t = planData.travels[i];
+    'currentPlan.itineraries': function(n, o) {
+      if (_.isNil(this.currentPlan)) return;
+
+      let currentPlan = this.currentPlan;
+      let it = currentPlan.itineraries;
+      for (let i=0; i < currentPlan.travels.length; i++) {
+        let t = currentPlan.travels[i];
         t.from = it[i].placeId;
         t.to = it[i+1].placeId;
       }

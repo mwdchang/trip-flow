@@ -19,6 +19,8 @@ export default new Vuex.Store({
 
     /* User input stuff */
     searchStr:  '',
+    currentPlan: null,
+    currentPlanIdx: -1,
 
     /* Dialog control */
     showNewTripDialog: false,
@@ -28,7 +30,6 @@ export default new Vuex.Store({
   },
   getters: {
     user: (state) => {
-      console.log('checking state', state);
       if (state.user === null) {
         return {
           name: null,
@@ -47,7 +48,9 @@ export default new Vuex.Store({
     showLoadTripDialog: (state) => state.showLoadTripDialog,
     showPlanDialog: (state) => state.showPlanDialog,
     showDestDialog: (state) => state.showDestDialog,
-    autocompleteService: (state) => state.autocompleteService
+    autocompleteService: (state) => state.autocompleteService,
+    currentPlan: (state) => state.currentPlan,
+    currentPlanIdx: (state) => state.currentPlanIdx
   },
   actions: {
     setSearchStr({commit}, s) {
@@ -60,7 +63,18 @@ export default new Vuex.Store({
       console.log('setShowLoadTripDialog', v);
       commit('setShowLoadTripDialog', v);
     },
-    setShowPlanDialog({commit}, v) {
+    setShowPlanDialog({commit, state}, v) {
+      if (v === true && state.currentPlan === null) {
+        commit('setCurrentPlan', {
+          name: '',
+          travels: [],
+          itineraries: [{
+            placeId: '',
+            duration: 1
+          }],
+          mode: null
+        });
+      }
       commit('setShowPlanDialog', v);
     },
     setShowDestDialog({commit}, v) {
@@ -69,13 +83,19 @@ export default new Vuex.Store({
     setTrip({commit}, trip) {
       commit('setTrip', trip);
     },
+    setCurrentPlan({commit}, p) {
+      commit('setCurrentPlan', p);
+    },
+    setCurrentPlanIdx({commit}, v) {
+      commit('setCurrentPlanIdx', v);
+    },
+
     setPlaceService({commit}, srv) {
       commit('setPlaceService', srv);
     },
     setAutocompleteService({commit}, srv) {
       commit('setAutocompleteService', srv);
     },
-
     getPlaceDetail({state}, placeId) {
       return new Promise(function(resolve, reject) {
         state.placeService.getDetails({placeId: placeId, types:['(cities)']}, function(place, status) {
@@ -107,6 +127,13 @@ export default new Vuex.Store({
     setShowDestDialog(state, v) {
       state.showDestDialog = v;
     },
+    setCurrentPlan(state, p) {
+      state.currentPlan = p;
+    },
+    setCurrentPlanIdx(state, v) {
+      state.currentPlanIdx = v;
+    },
+
     setTrip(state, trip) {
       state.trip = _.cloneDeep(trip);
     },
