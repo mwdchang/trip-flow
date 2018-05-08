@@ -1,13 +1,13 @@
 <template>
   <div style="width:50%; height:99%" id="summary">
     <ul class="nav nav-tabs" >
-      <li class="nav-item" v-on:click="switchTo('summary')">
+      <li class="nav-item" @click="switchTo('summary')">
         <a v-bind:class="{active: trip.view ==='summary'}" class="nav-link" href="#">Summary</a>
       </li>
-      <li class="nav-item" v-on:click="switchTo('plans')">
+      <li class="nav-item" @click="switchTo('plans')">
         <a v-bind:class="{active: trip.view ==='plans'}" class="nav-link" href="#">Plans </a>
       </li>
-      <li class="nav-item" v-on:click="switchTo('destinations')">
+      <li class="nav-item" @click="switchTo('destinations')">
         <a v-bind:class="{active: trip.view==='destinations'}" class="nav-link" href="#">Destinations</a>
       </li>
     </ul>
@@ -30,9 +30,9 @@
         Click on <strong><em>New Plan</em></strong> to add a new trip plan.
       </div>
 
-      <div style="display:flex; flex-direction:row">
+      <div class="flex-row">
         <div style="max-height: 25rem; overflow-y: scroll">
-          <div v-for="(plan, idx) of trip.plans" v-on:click="show(plan, idx)" class="plan-card">
+          <div v-for="(plan, idx) of trip.plans" @click="show(plan, idx)" class="plan-card" :key="idx" :class="{'active': currentPlan && currentPlan.name === plan.name}">
             {{plan.name}} <br>
             <em>{{plan.itineraries.length}} destinations</em>
             <br>
@@ -40,8 +40,11 @@
         </div> 
 
         <div style="margin-left: 0.5rem; padding-left: 1.0rem;  border-left: 1px solid #ddd; flex:1" v-if="currentPlan">
-          <button class="btn btn-sm btn-primary" v-on:click="editPlan()">Edit</button>
-          <button class="btn btn-sm btn-danger" v-on:click="deletePlan()">Delete</button>
+          <div class="flex-row">
+            <button class="btn btn-sm btn-primary" @click="editPlan()">Edit</button>
+            &nbsp;
+            <button class="btn btn-sm btn-danger" @click="deletePlan()">Delete</button>
+          </div>
           <table class="table" style="margin-top: 0.5rem">
             <tbody>
               <tr v-for="item of listPlan(currentPlan)">
@@ -66,7 +69,7 @@
       </div>
       <table class="table" v-if="trip.view==='destinations'">
         <tbody>
-          <tr v-for="(place, idx) in trip.places">
+          <tr v-for="(place, idx) in trip.places" :key="idx">
             <td>
               {{place.name}}
             </td>
@@ -79,7 +82,7 @@
             </td>
             <td>
               <span v-if="isPlaceUsed(place.placeId) === true" style="color:#CCC">Used</span>
-              <button v-if="isPlaceUsed(place.placeId) === false" class="btn btn-sm btn-danger" v-on:click="deletePlace(place.placeId)">Delete</button>
+              <button v-if="isPlaceUsed(place.placeId) === false" class="btn btn-sm btn-danger" @click="deletePlace(place.placeId)">Delete</button>
             </td>
           </tr>
         </tbody>
@@ -93,6 +96,7 @@
 
 import { mapGetters, mapActions } from 'vuex';
 import * as d3 from 'd3';
+import _ from 'lodash';
 
 import DB from '../util/db';
 
@@ -140,7 +144,7 @@ export default {
         if (idx !== -1) {
           this.trip.places.splice(idx, 1);
         }
-        this.writeDB(TEST_KEY, this.trip.toObj());
+        DB.writeDB('/Trip/' + this.trip.name, this.trip.toObj());
       }
     },
     editPlan: function() {
@@ -152,7 +156,7 @@ export default {
         this.trip.plans.splice(this.currentPlanIdx, 1);
         this.setCurrentPlan(null);
         this.setCurrentPlanIdx(-1);
-        this.writeDB(TEST_KEY, this.trip.toObj());
+        DB.writeDB('/Trip/' + this.trip.name, this.trip.toObj());
       }
       
     }
@@ -161,3 +165,16 @@ export default {
 }
 </script>
 
+
+<style lang="scss">
+.plan-card  {
+  padding: 0.25rem 0.5rem; 
+  border: 1px solid #ddd; 
+  border-radius: 4px;
+  margin: 0.25rem;
+
+  &.active {
+    background: #DDD;
+  }
+}
+</style>

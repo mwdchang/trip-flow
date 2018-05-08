@@ -87,7 +87,7 @@ export default class Graph {
           group.append('rect')
             .attr('x', start+1)
             .attr('y', 17+planIdx*(planH+5))
-            .attr('width', duration*unit-1)
+            .attr('width', duration*unit)
             .attr('height', 6)
             .style('fill', '#aaa');
         } else {

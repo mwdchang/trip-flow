@@ -144,12 +144,6 @@ select {
   color: #EEE;
 }
 
-.plan-card  {
-  padding: 0.25rem 0.5rem; 
-  border: 1px solid #ddd; 
-  border-radius: 4px;
-  margin: 0.25rem;
-}
 
 .action-button {
   font-size: 0.75rem;

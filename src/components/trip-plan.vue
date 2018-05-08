@@ -80,7 +80,7 @@
 
 import { mapGetters, mapActions } from 'vuex';
 import * as d3 from 'd3';
-
+import DB from '../util/db';
 
 export default {
   name: 'trip-plan',
@@ -121,9 +121,8 @@ export default {
         this.currentPlan.mode = null;
       }
       this.trip.sanitize();
-      this.writeDB(TEST_KEY, this.trip.toObj());
-
-      $(this.$el).modal('hide');
+      DB.writeDB('/Trip/' + this.trip.name, this.trip.toObj());
+      this.setShowPlanDialog(false);
     },
     cancel: function() {
       this.setShowPlanDialog(false);
