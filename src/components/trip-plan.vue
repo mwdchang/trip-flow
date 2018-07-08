@@ -20,7 +20,7 @@
                   <th>Notes</th>
                 </thead>
                 <tbody>
-                  <tr v-for="(item, idx) in currentPlan.itineraries" v-if="currentPlan.itineraries.length > 0">
+                  <tr v-for="(item, idx) in currentPlan.itineraries" :key="idx" v-if="currentPlan.itineraries.length > 0">
                     <td>
                       <button>-</button>
                       <button v-on:click="addRow()">+</button>
@@ -29,7 +29,7 @@
                       <select v-model="item.placeId">
                         <option disabled value="">Destinations</option>
                         <!--<option v-for="d in getTripPlaces()" v-bind:value="d.placeId">{{d.formatted_address}}</option>-->
-                        <option v-for="d in getTripPlaces()" v-bind:value="d.placeId">{{d.name}}</option>
+                        <option v-for="d in getTripPlaces()" :key="d.placeId" v-bind:value="d.placeId">{{d.name}}</option>
                       </select>
                     </td>
                     <td>
@@ -51,7 +51,7 @@
                   <th>Duration</th>
                 </thead>
                 <tbody>
-                  <tr v-for="travel in currentPlan.travels">
+                  <tr v-for="(travel, idx) in currentPlan.travels" :key="idx">
                     <td>
                       <span>{{findPlace(travel.from).name}} &gt; {{findPlace(travel.to).name}}</span>
                     </td>
@@ -79,7 +79,6 @@
 <script>
 
 import { mapGetters, mapActions } from 'vuex';
-import * as d3 from 'd3';
 import DB from '../util/db';
 
 export default {
@@ -150,7 +149,7 @@ export default {
     }
   },
   watch: {
-    'currentPlan.itineraries': function(n, o) {
+    'currentPlan.itineraries': function() {
       if (_.isNil(this.currentPlan)) return;
 
       let currentPlan = this.currentPlan;

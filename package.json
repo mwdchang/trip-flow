@@ -31,7 +31,12 @@
     "extends": [
       "plugin:vue/essential",
       "eslint:recommended"
-    ]
+    ],
+    "globals": {
+      "google": true,
+      "d3": true,
+      "_": true
+    }
   },
   "postcss": {
     "plugins": {

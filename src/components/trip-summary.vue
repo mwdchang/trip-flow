@@ -47,7 +47,7 @@
           </div>
           <table class="table" style="margin-top: 0.5rem">
             <tbody>
-              <tr v-for="item of listPlan(currentPlan)">
+              <tr v-for="(item, idx) of listPlan(currentPlan)" :key="idx">
                 <td style="padding:0; position:relative; border: 0; width:25px">
                   <div style="position:absolute; top:0; left:9px; width:2px; height:100%; background: #AAA"></div>
                   <div v-if="item.type === 'itineraries'" style="position:absolute; left:0px; width:20px; height:20px; background: #EEE; border:2px solid #AAA; border-radius:50%"></div>

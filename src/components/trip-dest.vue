@@ -10,7 +10,7 @@
             <br>
           </div>
           <div> 
-            <div v-for="c in searchCandidates" class="destination-card" v-on:click="select(c)" style="display:inline-block">
+            <div v-for="(c, idx) in searchCandidates" :key="idx" class="destination-card" v-on:click="select(c)" style="display:inline-block">
               {{c.formatted_address}}<br>
               <div v-if="c.photos">
                 <img v-bind:src="c.photos[0].getUrl({maxHeight:65})" v-if="c.photos[0]">
@@ -44,11 +44,9 @@ function debounce(func, wait, immediate) {
     timeout = setTimeout(later, wait);
     if (callNow) func.apply(context, args);
   };
-};
-
+}
 
 import { mapGetters, mapActions } from 'vuex';
-
 
 export default {
   name: 'TripDest',
@@ -95,7 +93,7 @@ export default {
     }, 800)
   },
   watch: {
-    searchStr: function(n, o) {
+    searchStr: function() {
       if (this.searchStr.length < 3) {
         this.searchCandidates = [];
         return;

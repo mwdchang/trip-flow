@@ -8,7 +8,7 @@
       <div class="modal-body">
         <table class="table table-hover">
           <tbody>
-            <tr v-for="trip of trips" style="cursor:pointer" v-on:click="load(trip)">
+            <tr v-for="(trip, idx) of trips" :key="idx" style="cursor:pointer" v-on:click="load(trip)">
               <td>{{trip}}</td>
             </tr>
           </tbody>
@@ -38,7 +38,6 @@ export default {
       trips.forEach( t => {
         this.trips.push(t);
       });
-      console.log('Done loading trips...', this.trips);
     });
   },
   computed: {
